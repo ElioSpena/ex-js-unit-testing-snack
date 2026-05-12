@@ -4,25 +4,30 @@ const {
   average,
   isPalindrome,
   findPostById,
+  addPost,
+  removePost,
 } = require("./index.js");
 
-const posts = [
-  {
-    id: 1,
-    title: "Viaggio a Parigi",
-    slug: createSlug("Viaggio a Parigi"),
-  },
-  {
-    id: 2,
-    title: "Ricetta Pizza",
-    slug: createSlug("Ricetta Pizza"),
-  },
-  {
-    id: 3,
-    title: "Routine Mattutina",
-    slug: createSlug("Routine Mattutina"),
-  },
-];
+let posts;
+beforeEach(() => {
+  posts = [
+    {
+      id: 1,
+      title: "Viaggio a Parigi",
+      slug: createSlug("Viaggio a Parigi"),
+    },
+    {
+      id: 2,
+      title: "Ricetta Pizza",
+      slug: createSlug("Ricetta Pizza"),
+    },
+    {
+      id: 3,
+      title: "Routine Mattutina",
+      slug: createSlug("Routine Mattutina"),
+    },
+  ];
+});
 
 describe("Test su createSlug", () => {
   test("La funzione createSlug restituisce una stringa in lowercase", () => {
@@ -63,5 +68,39 @@ describe("Altri Test", () => {
 
   test("La funzione isPalindrome verifica se una stringa è un palindromo", () => {
     expect(isPalindrome("Anna")).toBeTruthy();
+  });
+});
+
+describe("Test su manipolazione array posts", () => {
+  test("Dopo aver aggiunto un post con la funzione addPost, l'array posts deve contenere un elemento in più", () => {
+    addPost(posts, {
+      id: 4,
+      title: "Viaggio a Londra",
+      slug: createSlug("Viaggio a Londra"),
+    });
+    expect(posts).toHaveLength(4);
+  });
+
+  test("Dopo aver rimosso un post con la funzione removePost, l'array posts deve contenere un elemento in meno", () => {
+    removePost(posts, 1);
+    expect(posts).toHaveLength(2);
+  });
+
+  test("Se si tenta di aggiungere un post con un id o uno slug già esistente, la funzione addPost deve lanciare un errore", () => {
+    expect(() => {
+      addPost(posts, {
+        id: 5,
+        title: "Viaggio a Roma",
+        slug: createSlug("Viaggio a Parigi"),
+      });
+    }).toThrow("Slug già presente!");
+
+    expect(() => {
+      addPost(posts, {
+        id: 1,
+        title: "Viaggio a Roma",
+        slug: createSlug("Viaggio a Roma"),
+      });
+    }).toThrow("Id già presente!");
   });
 });

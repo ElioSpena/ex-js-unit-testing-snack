@@ -6,7 +6,7 @@ function getInitials(user) {
 }
 
 function createSlug(string) {
-  if (string === "" || !isNaN(string)) {
+  if (!string || !isNaN(string)) {
     throw new Error("Inserire un titolo valido!");
   }
   return string.toLowerCase().replaceAll(" ", "-");
@@ -29,10 +29,29 @@ function findPostById(arr, id) {
   return arr.find((p) => p.id === id);
 }
 
+function addPost(posts, obj) {
+  if (posts.some((p) => p.id === obj.id)) {
+    throw new Error("Id già presente!");
+  }
+
+  if (posts.some((p) => p.slug === obj.slug)) {
+    throw new Error("Slug già presente!");
+  }
+
+  return posts.push(obj);
+}
+
+function removePost(posts, id) {
+  const postToRemove = posts.findIndex((p) => p.id === id);
+  posts.splice(postToRemove, 1);
+}
+
 module.exports = {
   getInitials,
   createSlug,
   average,
   isPalindrome,
   findPostById,
+  addPost,
+  removePost,
 };
